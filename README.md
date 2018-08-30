@@ -1,2 +1,2 @@
 # cloudant-performancedashboards
-Dashboards for displaying performance collection data
+Dashboards for displaying performance data in Grafana collected by cloudant-performancecollector
