@@ -137,3 +137,133 @@ The volume charts are guide to dynamics of data build-up and likely demand for c
 Dependent on the metricsdbagent collector .  
 Dependent on the volume collector (usually per day)  
 metricsdb collects all data and does not support exclusions - so effectively all clients volumes.
+
+Dependent on the `smoosh_stats`, `ioq_stats`, `db_stats`,`smoosh_stats` tables
+
+##	Volume Overview by Cluster
+
+[volumebycluster]: volumeoverviewbycluster.png
+
+![volumebycluster]
+
+#### Options
+
+This dashboard provides a mix of per-minute proxy-sourced, dbnode charts and per-day volume charts just for the whole cluster. 
+
+The only selection option is the cluster
+
+#### Use Cases
+
+This is intended as a capture of all the key metrics at cluster level, which provide a health and growth picture.   
+
+Daily trends at the cluster level should be readily apparent.
+
+Changes from 'normal' should be readily apparent.
+
+#### Dependencies
+
+Dependent on the proxydata and clientdata collectors
+Dependent on the metricsdbagent collector .  
+Dependent on the volume collector (usually per day)  
+metricsdb collects all data and does not support exclusions - so effectively all clients volumes.
+
+Dependent on the `verb_stats`,`client_verb_stats`,`ioq_stats`, `db_stats` and `view_stats` tables
+
+##	Volume Overview by Database
+
+[volumebydatabase]: volumeoverviewbydatabase.png
+
+![volumebydatabase]
+
+#### Options
+
+This dashboard provides a ranked topn distribution of cluster database volumes for a number of criteria using the volume data collector. Items ranked lower than n are lumped into an others item.  
+
+n can be 10,20,50,100 (or can be easily any others using grafana)
+
+The min database and view size can be used asa a threshold to ignore small sizes. Ranking includes this filter.
+
+The data is derived from the latest data available and this timepoint is displayed on the chart in YYYYMMDDHH24MISS format.
+
+#### Use Cases
+
+This is intended as a means to identify the key databases which are occupying resources on the cluster.
+
+Also invaluable in identifying the effectiveness of compaction.   
+
+The dashboard `Volume Overview By Cluster` captures the time-dynamics of volume growth at the db level.
+
+#### Dependencies
+  
+Dependent on the volume collector (usually per day)  
+
+Dependent on the `db_stats` and `view_stats` tables
+
+##	Volume Overview by View
+
+[volumebyview]: volumeoverviewbyview.png
+
+![volumebyview]
+
+#### Options
+
+This dashboard provides a ranked topn distribution of cluster mrview volumes for a number of criteria using the volume data collector. Items ranked lower than n are lumped into an others item.  
+
+n can be 10,20,50,100 (or can be easily any others using grafana)
+
+The min view size can be used asa a threshold to ignore small sizes. Ranking includes this filter.
+
+The data is derived from the latest data available and this timepoint is displayed on the chart in YYYYMMDDHH24MISS format.
+
+#### Use Cases
+
+This is intended as a means to identify the key views which are occupying resources on the cluster, and provides ranking of views independent of owning databases.
+
+Also invaluable in identifying the effectiveness of compaction.   
+
+#### Dependencies
+  
+Dependent on the volume collector (usually per day)  
+
+Dependent on the `view_stats` tables
+
+
+##	Volume Status by Project Phase
+
+[volumebyprojectphase]: volumestatusbyprojectphase.png
+
+![volumebyprojectphase]
+
+#### Options
+
+This dashboard provides a ranked distribution of databases of a given context of cluster,project,phase where:   
+
+* project is usually a client application using the cluster
+* phase is a milestone marker such as 'dev'.  
+
+n can be 10,20,50,100 (or can be easily any others using grafana)
+
+Options can be :  
+
+* cluster,project,phase and all databases owned
+* cluster,project,phase and selected databases owned
+* the view details apply to the databases selected
+
+The min data and min view size can be used asa a threshold to ignore small sizes. Ranking includes this filter.
+
+The data is derived from the latest data available and this timepoint is displayed on the chart in YYYYMMDDHH24MISS format.
+
+
+#### Use Cases
+
+The dashboard is designed for detailed exploration of the volume collector data. Drilldown to view details for one or more databases owned by the project-phase is possible. 
+
+Also invaluable in identifying the effectiveness of compaction, and provides shard counts, slack and ratio calculations   
+
+#### Dependencies
+  
+Dependent on the volume collector (usually per day)  
+
+Dependent on the `db_project_phase_stats` and`view_project_phase_stats` views, which sits above db_stats and view_stats, and provides pre-calculated project & phase extraction logic from dbnames.  
+The default view definitions are contained in the script `volumestatus_views_create.sql` provided in the release. It assumes dbs are named with the `projname_phasename_dbname` convention.  
+Other naming strategies or lookup table joins can be used, but the view must be changed.
